@@ -1,0 +1,13 @@
+import Transform from './template.mjs'
+
+export default [
+  {
+    type: 'input',
+    name: 'name',
+    message: 'name: ',
+    filter: (input) => {
+      Transform.var.name = input
+      return input
+    },
+  },__inputs__
+]
