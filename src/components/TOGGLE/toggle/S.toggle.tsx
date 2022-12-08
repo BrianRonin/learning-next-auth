@@ -3,12 +3,7 @@ import styled from '@emotion/styled'
 import { toggleProps } from './toggle'
 
 export const Main = styled.div`
-  ${({ theme }) => css`
-    position: fixed;
-    top: 2rem;
-    right: 2rem;
-    z-index: 2;
-  `}
+  ${({ theme }) => css``}
 `
 
 export const Label = styled.label`

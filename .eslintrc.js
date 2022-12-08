@@ -43,6 +43,7 @@ module.exports = {
     'react/no-children-prop': 0,
     '@typescript-eslint/ban-ts-comment': 0,
     'no-unused-vars': 0,
+    '@typescript-eslint/no-empty-interface': 0,
     'react/no-unknown-property': [
       'error',
       { ignore: ['css'] },

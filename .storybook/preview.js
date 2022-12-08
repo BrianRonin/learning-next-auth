@@ -4,22 +4,21 @@ import { DefaultTheme } from '../src/styles/theme/default'
 import { dark_theme } from '../src/styles/theme/dark'
 import { ThemeProvider } from '@emotion/react'
 
-// import { GlobalStyles } from '../src/styles/globals'
-// import { Theme } from '../src/contexts/theme/theme'
-// import styled from '@emotion/styled'
-// const background = styled.div`
-//   background-color: red !important;
-//   color: red !important;
-// `
-// const ProviderTheme = ({ theme, children }) => {
-//   return (
-//     <Theme _theme={theme}>
-//       <background></background>
-//       <GlobalStyles />
-//       {children}
-//     </Theme>
-//   )
-// }
+import { GlobalStyles } from '../src/styles/globals'
+import { Theme } from '../src/contexts/theme/theme'
+import styled from '@emotion/styled'
+const background = styled.div`
+  background-color: red !important;
+  color: red !important;
+`
+const ProviderTheme = ({ theme, children }) => {
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      {children}
+    </ThemeProvider>
+  )
+}
 
 export const onThemeSwitch = (context) => {
   const { theme } = context
@@ -38,7 +37,8 @@ export const onThemeSwitch = (context) => {
 
 addDecorator(
   withThemes(
-    ThemeProvider,
+    // ThemeProvider,
+    ProviderTheme,
     [DefaultTheme, dark_theme],
     {
       onThemeSwitch,
@@ -56,4 +56,10 @@ export const parameters = {
   },
 }
 
-export const decorators = [(Story) => <Story />]
+export const decorators = [
+  (Story) => (
+    <>
+      <Story />
+    </>
+  ),
+]

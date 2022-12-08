@@ -5,9 +5,16 @@ import { RiLockPasswordLine } from 'react-icons/ri'
 import { MdAlternateEmail } from 'react-icons/md'
 import { ButtonOne } from '../../BUTTON/button_one/button_one'
 
+export type callBackFormLogin0Props = {
+  email: string
+  password: string
+}
+
 export type formLogin0Props = {
-  errorMesage: any
-  onLogin: any
+  errorMesage?: string
+  onLogin?: (
+    props: callBackFormLogin0Props,
+  ) => any
 }
 
 export const FormLogin0 = ({
@@ -24,7 +31,7 @@ export const FormLogin0 = ({
     setLoading(true)
     event.preventDefault()
     if (onLogin) {
-      await onLogin(email, password)
+      await onLogin({ email, password })
     }
     setLoading(false)
   }
