@@ -10,7 +10,7 @@ export default NextAuth({
     secret: process.env.JWT_SIGNING_PRIVATE_KEY,
   },
   session: {
-    maxAge: 7 * 24 * 60 * 60,
+    maxAge: 9000,
     strategy: 'jwt',
   },
   providers: [
@@ -29,7 +29,6 @@ export default NextAuth({
         },
       },
       async authorize(credentials, req) {
-        const user = null
         try {
           const { data: _jwt } =
             await Client.mutate({
@@ -38,17 +37,9 @@ export default NextAuth({
                 email: credentials?.email,
                 password: credentials?.password,
               },
-              context: { clientName: 'system' },
+              context: { system: true },
             })
           if (!_jwt.auth_login) return null
-          // const { data } =
-          //   await apollo_client_system.mutate({
-          //     mutation: query_me,
-
-          //   })
-          console.log(
-            '_jwt_: ' + JSON.stringify(_jwt),
-          )
           return _jwt.auth_login
         } catch (e) {
           console.log(e)
@@ -102,20 +93,38 @@ export default NextAuth({
 
       if (account && user) {
         if (account.type === 'credentials') {
+          const { data } = await Client.mutate({
+            mutation: query_me,
+            context: {
+              system: 'system',
+              auth: user.access_token,
+            },
+          })
           return {
-            ...token,
-            ...user,
+            auth: user,
+            user: {
+              name: data.users_me.first_name,
+            },
           }
         }
       }
       return token
     },
-    async session({ session, token }) {
-      session.user = {
-        ...session.user,
-        ...token,
+    async session({ session, token, user }) {
+      session.user = token.user
+      console.log('----- SESION -----')
+      console.log(
+        'session: ' + JSON.stringify(session),
+      )
+      console.log(
+        'token: ' + JSON.stringify(token),
+      )
+      console.log('user: ' + user)
+      console.log('----- SESION -----')
+      return {
+        ...session,
+        token: token.auth.access_token,
       }
-      return session
     },
   },
 })

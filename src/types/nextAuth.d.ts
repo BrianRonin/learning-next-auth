@@ -1,22 +1,34 @@
+import { ApolloClient } from '@apollo/client'
 import NextAuth, {
   DefaultSession,
 } from 'next-auth'
 import { JWT } from 'next-auth/jwt'
 
-type Auth = {
-  access_token: string
-  refresh_token: string
-  expires: number
-  __typename: string
-}
-
 declare module 'next-auth' {
-  interface User extends Auth {}
+  interface User {
+    access_token: string
+    refresh_token: string
+    expires: number
+    __typename: string
+  }
   interface Session {
-    user: User
+    token: string
+    user: {
+      name: string
+    }
   }
 }
 
 declare module 'next-auth/jwt' {
-  interface JWT extends Auth {}
+  interface JWT {
+    auth: {
+      access_token: string
+      refresh_token: string
+      expires: number
+      __typename: string
+    }
+    user: {
+      name: string
+    }
+  }
 }
