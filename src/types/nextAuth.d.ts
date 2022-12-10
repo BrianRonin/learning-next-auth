@@ -4,15 +4,15 @@ import NextAuth, {
 } from 'next-auth'
 import { JWT } from 'next-auth/jwt'
 
+export type Auth = {
+  email: string
+  password: string
+}
+
 declare module 'next-auth' {
-  interface User {
-    access_token: string
-    refresh_token: string
-    expires: number
-    __typename: string
-  }
+  interface User extends Auth {}
   interface Session {
-    token: string
+    auth: Auth
     user: {
       name: string
     }
@@ -21,12 +21,7 @@ declare module 'next-auth' {
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    auth: {
-      access_token: string
-      refresh_token: string
-      expires: number
-      __typename: string
-    }
+    auth: Auth
     user: {
       name: string
     }

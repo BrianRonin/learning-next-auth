@@ -28,7 +28,8 @@ export const InputOne = ({
   reference = null,
 }: inputOneProps) => {
   const [hasValue, setHasValue] = useState(false)
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] =
+    useState(value)
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>,

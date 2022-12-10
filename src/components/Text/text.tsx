@@ -1,4 +1,5 @@
 import * as S from './S.text'
+import React from 'react'
 
 export type TextProps = {
   children: string | React.ReactNode

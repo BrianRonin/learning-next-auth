@@ -4,7 +4,7 @@ import { Roboto } from '@next/font/google'
 import { Theme } from '../contexts/theme/theme'
 import { SessionProvider } from 'next-auth/react'
 import { ApolloProvider } from '@apollo/client'
-import { Client } from '../api/graphql/apollo_client'
+import { _Client } from '../api/graphql/apollo_client'
 
 const myFont = Roboto({
   style: ['normal', 'italic'],
@@ -18,7 +18,7 @@ export default function App({
 }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
-      <ApolloProvider client={Client}>
+      <ApolloProvider client={_Client}>
         <Theme>
           <GlobalStyles />
           <main className={myFont.className}>

@@ -40,13 +40,11 @@ export const auth = gql`
 `
 
 export const refreshToken = gql`
-  mutation RefreshToken($RefreshToken: String) {
-    auth_refresh(
-      refresh_token: $RefreshToken
-      mode: json
-    ) {
+  mutation RefreshToken($token: String) {
+    auth_refresh(refresh_token: $token) {
       access_token
       refresh_token
+      expires
     }
   }
 `

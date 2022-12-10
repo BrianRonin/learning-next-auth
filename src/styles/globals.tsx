@@ -24,6 +24,14 @@ export const GlobalStyles = () => {
           font-size: 16px;
           color: ${theme.colors.text};
         }
+        a {
+          text-decoration: none;
+          &:hover {
+            text-decoration: none;
+          }
+          background: none;
+          color: ${theme.colors.text};
+        }
         h1,
         h2,
         h3,

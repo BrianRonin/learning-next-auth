@@ -1,11 +1,15 @@
 import { gql } from '@apollo/client'
 
 export const createPost = gql`
-  mutation createPost($content: String) {
+  mutation createPost(
+    $content: String
+    $title: String
+  ) {
     create_post_item(
-      data: { conteudo: $content }
+      data: { conteudo: $content, titulo: $title }
     ) {
       conteudo
+      titulo
     }
   }
 `
