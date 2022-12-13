@@ -2,9 +2,39 @@ import type { AppProps } from 'next/app'
 import { GlobalStyles } from '../styles/globals'
 import { Roboto } from '@next/font/google'
 import { Theme } from '../contexts/theme/theme'
-import { SessionProvider } from 'next-auth/react'
-import { ApolloProvider } from '@apollo/client'
-import { _Client } from '../api/graphql/apollo_client'
+import {
+  SessionProvider,
+  useSession,
+} from 'next-auth/react'
+import { ReactNode, useEffect } from 'react'
+import {
+  ApolloProvider,
+  from,
+} from '@apollo/client'
+import {
+  AuthLink,
+  Client,
+} from '../api/graphql/apollo_client'
+import { ContextPost } from './../contexts/updatePost/updatePost'
+import { Session } from 'next-auth'
+
+const SetLinkClient = ({
+  children,
+}: {
+  children: ReactNode
+}) => {
+  const { data, status } = useSession()
+  data?.auth &&
+    Client.setLink(
+      from(
+        AuthLink({
+          auth: data.auth,
+        } as Session),
+      ),
+    )
+
+  return <>{children}</>
+}
 
 const myFont = Roboto({
   style: ['normal', 'italic'],
@@ -18,13 +48,17 @@ export default function App({
 }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
-      <ApolloProvider client={_Client}>
+      <ApolloProvider client={Client}>
+        {/* <SetLinkClient> */}
         <Theme>
           <GlobalStyles />
-          <main className={myFont.className}>
-            <Component {...pageProps} />
-          </main>
+          <ContextPost>
+            <main className={myFont.className}>
+              <Component {...pageProps} />
+            </main>
+          </ContextPost>
         </Theme>
+        {/* </SetLinkClient> */}
       </ApolloProvider>
     </SessionProvider>
   )

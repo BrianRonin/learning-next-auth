@@ -1,6 +1,14 @@
-import { signIn } from 'next-auth/react'
+import { from } from '@apollo/client'
+import {
+  getSession,
+  signIn,
+} from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import {
+  AuthLink,
+  Client,
+} from '../api/graphql/apollo_client'
 import {
   callBackFormLogin0Props,
   FormLogin0,
@@ -40,4 +48,12 @@ export default function LoginPage() {
       </S_ContainerOne>
     </Base>
   )
+}
+export async function getServerSideProps(ctx) {
+  const session = await getSession(ctx)
+  if (!session) return { props: {} }
+  Client.setLink(from(AuthLink(session)))
+  return {
+    props: {},
+  }
 }

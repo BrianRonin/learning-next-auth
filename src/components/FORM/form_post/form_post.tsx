@@ -2,8 +2,8 @@ import { InputOne } from '../../INPUT/input_one/input_one'
 import { useState, FormEvent } from 'react'
 import * as S from './S.form_post'
 import { ButtonOne } from '../../BUTTON/button_one/button_one'
-import { Post } from '../../../templates/POST/MutatePost/MutatePost'
 import { useRouter } from 'next/router'
+import { Post } from '../../../types/post'
 
 export type formPostProps = {
   onSave?: (post: Post) => any
@@ -17,30 +17,29 @@ export const FormPost = ({
   const {
     title = 'titulo',
     content = 'conteudoff',
+    id = false,
   } = post || {}
   const [newTitle, setNewTitle] = useState(title)
   const [newContent, setNewContent] =
     useState(content)
   const [saving, setSaving] = useState(false)
-  const router = useRouter()
-  const isEdit =
-    router.query?.title || router.query?.content
   const handleSubmit = async (
     event: FormEvent,
   ) => {
-    console.log('passou')
-    setSaving(true)
+    setSaving(() => true)
     event.preventDefault()
+    const hasId = id ? id : {}
     const newPost = {
       title: newTitle,
       content: newContent,
+      ...hasId,
     }
 
     if (onSave) {
-      await onSave(newPost)
+      onSave(newPost)
     }
 
-    setSaving(false)
+    setSaving(() => false)
   }
 
   return (
@@ -59,11 +58,7 @@ export const FormPost = ({
         as='textarea'
       />
       <ButtonOne disabled={saving} type='submit'>
-        {saving
-          ? 'Salvando...'
-          : isEdit
-          ? 'Editar'
-          : 'Salvar'}
+        Salvar
       </ButtonOne>
     </S.Main>
   )

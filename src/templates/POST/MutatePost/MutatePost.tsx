@@ -7,56 +7,48 @@ import {
 } from '../../../api/graphql/Post/mutations'
 import { useSession } from 'next-auth/react'
 import { useMutation } from '@apollo/client'
-import { getToken } from '../../../api/graphql/apollo_client'
-import { useRouter } from 'next/router'
+import { useContext, useEffect } from 'react'
+import { C_Post } from '../../../contexts/updatePost/updatePost'
+import { Post } from '../../../types/post'
 
-export type Post = {
-  title: string
-  content: string
-}
-
-export type mutatePostProps = {
-  post: Post
-}
-
-export const MutatePost = ({
-  post,
-}: mutatePostProps) => {
+export const MutatePost = () => {
   const [_createPost] = useMutation(createPost)
   const [_updatePost] = useMutation(updatePost)
   const { data } = useSession()
-  const router = useRouter()
+  const { post, setPost } = useContext(C_Post)
+
   if (!data?.auth) return null
 
-  const handleSubmit = async (post: Post) => {
-    if (router.query.id)
-      return handleUpdatePost(post)
+  const handleSubmit = (post: Post) => {
+    console.log(post)
+    if (post.id) return handleUpdatePost(post)
     return handleSavePost(post)
   }
 
   const handleSavePost = async (post: Post) => {
-    _createPost({
-      variables: post,
-      context: {
-        auth: await getToken(data.auth),
-      },
-    })
+    try {
+      _createPost({
+        variables: post,
+        context: { auth: data.auth },
+      })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const handleUpdatePost = async (post: Post) => {
     _updatePost({
       variables: post,
-      context: {
-        auth: await getToken(data.auth),
-      },
+      context: { auth: data.auth },
     })
+    setPost!({})
   }
   return (
     <Base>
       <S.Main>
         <FormPost
           onSave={handleSubmit}
-          post={post}
+          post={post && post}
         />
       </S.Main>
     </Base>

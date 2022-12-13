@@ -1,11 +1,12 @@
 import * as S from './S.card'
 import { IoMdClose } from 'react-icons/io'
 import { BsPen } from 'react-icons/bs'
-import { Client } from '../../api/graphql/apollo_client'
-import { deletePost as _deletePost } from '../../api/graphql/Post/mutations'
+import { deletePost } from '../../api/graphql/Post/mutations'
 import { useSession } from 'next-auth/react'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useRouter } from 'next/router'
+import { C_Post } from './../../contexts/updatePost/updatePost'
+import { useMutation } from '@apollo/client'
 export type cardProps = {
   content: string
   title: string
@@ -20,17 +21,22 @@ export const Card = ({
   const { data } = useSession()
   const [deleted, setDeleted] = useState(false)
   const router = useRouter()
-  const deletePost = (id: number) => {
-    Client(
-      {
-        mutate: {
-          mutation: _deletePost,
-          variables: { id },
-        },
-      },
-      data?.auth,
-    )
+  const [_deletePost] = useMutation(deletePost)
+  const handleDeletePost = async (id: number) => {
+    if (!data?.auth) return
+    _deletePost({
+      variables: { id },
+    })
     setDeleted(true)
+  }
+  const { setPost } = useContext(C_Post)
+  const handleUpdatePost = () => {
+    setPost!({
+      content: content || '',
+      title: title || '',
+      id: id.toString(),
+    })
+    router.push('mutate-post')
   }
 
   if (deleted) return null
@@ -38,14 +44,12 @@ export const Card = ({
     <S.Main>
       <strong>{title}</strong>
       <br />
-      <IoMdClose onClick={() => deletePost(id)} />
+      <IoMdClose
+        onClick={() => handleDeletePost(id)}
+      />
       <BsPen
         className='IconPen'
-        onClick={() =>
-          router.push('/mutate-post', {
-            query: { title, content },
-          })
-        }
+        onClick={handleUpdatePost}
       />
       {content}
     </S.Main>

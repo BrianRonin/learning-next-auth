@@ -15,11 +15,12 @@ export const createPost = gql`
 `
 export const updatePost = gql`
   mutation updatedPost(
+    $title: String
     $content: String
     $id: ID!
   ) {
     update_post_item(
-      data: { conteudo: $content }
+      data: { conteudo: $content, titulo: $title }
       id: $id
     ) {
       conteudo
