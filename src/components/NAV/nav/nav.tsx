@@ -8,6 +8,7 @@ import {
 } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useTheme } from '@emotion/react'
+import { ToggleTheme } from '../../TOGGLE/toggle_theme/toggle_theme'
 
 export const Nav = () => {
   const theme = useTheme()
@@ -18,6 +19,7 @@ export const Nav = () => {
     <S.Main>
       <S.Content>
         <NavLink redirect='/'>Home</NavLink>
+
         {status === 'unauthenticated' && (
           <Link
             href={{
@@ -47,6 +49,7 @@ export const Nav = () => {
             </div>
           </>
         )}
+        <ToggleTheme />
       </S.Content>
     </S.Main>
   )

@@ -6,10 +6,11 @@ export const createPost = gql`
     $title: String
   ) {
     create_post_item(
-      data: { conteudo: $content, titulo: $title }
+      data: { content: $content, title: $title }
     ) {
-      conteudo
-      titulo
+      content
+      title
+      id
     }
   }
 `
@@ -20,10 +21,12 @@ export const updatePost = gql`
     $id: ID!
   ) {
     update_post_item(
-      data: { conteudo: $content, titulo: $title }
+      data: { content: $content, title: $title }
       id: $id
     ) {
-      conteudo
+      content
+      title
+      id
     }
   }
 `

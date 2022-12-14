@@ -11,12 +11,7 @@ import {
 import { getAllPosts } from '../api/graphql/Post/queries'
 import { Posts as T_Posts } from '../templates/POST/Posts/Posts'
 export default function Posts(ctx) {
-  const session = useSession()
-  const { data = { post: [] } } = useQuery(
-    getAllPosts,
-    { context: { auth: session.data?.auth } },
-  )
-  return <T_Posts posts={data.post} />
+  return <T_Posts />
 }
 
 // export const getServerSideProps = async (ctx) => {

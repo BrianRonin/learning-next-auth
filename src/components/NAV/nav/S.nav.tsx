@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 export const Main = styled.nav`
   ${({ theme }) => css`
     display: flex;
+    position: relative;
     justify-content: center;
     flex-flow: row wrap;
     align-items: center;
@@ -70,11 +71,11 @@ export const Content = styled.div`
     }
     @media ${theme.media.lSmall} {
       a {
-        font-size: ${theme.fonts.sizes.xsmall};
+        font-size: ${theme.fonts.sizes.normal};
       }
       gap: 1rem;
       svg {
-        font-size: ${theme.fonts.sizes.normal};
+        font-size: ${theme.fonts.sizes.medium};
       }
     }
   `}

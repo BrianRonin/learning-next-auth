@@ -6,18 +6,18 @@ import { Base } from '../../Base/Base'
 import { IoMdAdd } from 'react-icons/io'
 import * as S from './S.Posts'
 import Link from 'next/link'
+import {
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
+import { C_Post } from '../../../contexts/Posts/Posts'
 
-export type postsProps = {
-  posts: {
-    conteudo: string
-    titulo: string
-    id: number
-  }[]
-}
-
-export const Posts = ({ posts }: postsProps) => {
+export const Posts = () => {
   const router = useRouter()
   const { status } = useSession()
+  const { posts, setPost } = useContext(C_Post)
+
   if (status === 'loading') return <Base />
   if (status === 'unauthenticated') {
     router.push({
@@ -26,21 +26,26 @@ export const Posts = ({ posts }: postsProps) => {
     })
     return null
   }
+
   return (
     <Base>
       <S.Main>
         <Grid>
-          {posts.map(
-            ({ conteudo, id, titulo }, i) => (
-              <Card
-                key={i}
-                id={id}
-                content={conteudo}
-                title={titulo}
-              />
-            ),
-          )}
-          <Link href={'/mutate-post'}>
+          {posts &&
+            posts.map(
+              ({ content, id, title }, i) => (
+                <Card
+                  key={i}
+                  id={id}
+                  content={content}
+                  title={title}
+                />
+              ),
+            )}
+          <Link
+            href={'/mutate-post'}
+            onClick={() => setPost({})}
+          >
             <S.CreatePost>
               <IoMdAdd />
             </S.CreatePost>

@@ -15,7 +15,7 @@ export type Auth = {
 }
 
 declare module 'next-auth' {
-  interface User extends UserDirectus {}
+  interface User extends Auth {}
   interface Session {
     auth: string | null
     user: {
@@ -26,7 +26,8 @@ declare module 'next-auth' {
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    class: UserDirectus
+    credentials: Auth
+    expire: number
     auth: string | null
     user: {
       name: string

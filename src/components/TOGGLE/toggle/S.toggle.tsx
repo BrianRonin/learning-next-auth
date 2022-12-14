@@ -26,7 +26,7 @@ export const Input = styled.input`
     width: 0;
     height: 0;
     &:checked + ${Slider} {
-      background: ${theme.colors.secondary};
+      background: ${theme.colors.bg};
     }
     &:focus + ${Slider} {
       box-shadow: 0 1 2px
@@ -58,7 +58,7 @@ export const Slider = styled.span`
       width: 2.1rem;
       left: 0.4rem;
       bottom: 0.2rem;
-      background: ${theme.colors.text};
+      background: ${theme.colors.primary};
       border-radius: 50%;
       transition: all 300ms ease-in-out;
     }

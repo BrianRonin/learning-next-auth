@@ -8,47 +8,95 @@ import {
 import { useSession } from 'next-auth/react'
 import { useMutation } from '@apollo/client'
 import { useContext, useEffect } from 'react'
-import { C_Post } from '../../../contexts/updatePost/updatePost'
+import { C_Post } from '../../../contexts/Posts/Posts'
 import { Post } from '../../../types/post'
+import { useRouter } from 'next/router'
 
 export const MutatePost = () => {
-  const [_createPost] = useMutation(createPost)
-  const [_updatePost] = useMutation(updatePost)
-  const { data } = useSession()
-  const { post, setPost } = useContext(C_Post)
+  const router = useRouter()
+  const [_createPost] =
+    useMutation<{
+      create_post_item: Post
+    }>(createPost)
 
-  if (!data?.auth) return null
+  const [_updatePost] =
+    useMutation<{ update_post_item: Post }>(
+      updatePost,
+    )
+
+  const { data, status } = useSession()
+  const { post, setPost, setPosts } =
+    useContext(C_Post)
+
+  useEffect(() => {
+    if (status === 'unauthenticated')
+      router.push('/login', {
+        query: { redirect: router.pathname },
+      })
+  }, [status])
+
+  if (status !== 'authenticated') {
+    return null
+  }
 
   const handleSubmit = (post: Post) => {
-    console.log(post)
-    if (post.id) return handleUpdatePost(post)
+    if (post.id > 0) return handleUpdatePost(post)
     return handleSavePost(post)
   }
 
   const handleSavePost = async (post: Post) => {
     try {
-      _createPost({
-        variables: post,
-        context: { auth: data.auth },
-      })
+      console.log('post: ' + post)
+      const { data: newPost } = await _createPost(
+        {
+          variables: {
+            title: post.title,
+            content: post.content,
+          },
+          context: { auth: data.auth },
+        },
+      )
+      if (!newPost?.create_post_item) return
+      setPosts((posts) => [
+        ...posts,
+        newPost.create_post_item,
+      ])
     } catch (e) {
       console.log(e)
     }
   }
 
   const handleUpdatePost = async (post: Post) => {
-    _updatePost({
+    const { data: newPost } = await _updatePost({
       variables: post,
       context: { auth: data.auth },
     })
-    setPost!({})
+    if (newPost?.update_post_item) {
+      setPosts((posts) => {
+        const newPosts: Post[] = []
+        posts.map((post) => {
+          if (
+            post.id ===
+            newPost.update_post_item.id
+          ) {
+            newPosts.push(
+              newPost.update_post_item,
+            )
+          } else {
+            newPosts.push(post)
+          }
+        })
+        return newPosts
+      })
+      setPost({})
+    }
   }
   return (
     <Base>
       <S.Main>
         <FormPost
           onSave={handleSubmit}
-          post={post && post}
+          post={post}
         />
       </S.Main>
     </Base>

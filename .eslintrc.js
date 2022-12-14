@@ -48,5 +48,6 @@ module.exports = {
       'error',
       { ignore: ['css'] },
     ],
+    '@typescript-eslint/ban-types': 0,
   },
 }

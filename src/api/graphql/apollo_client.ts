@@ -13,13 +13,14 @@ export const AuthLink = (session?: Session) => {
       const auth = operation.getContext().auth
       const isAdm = operation.getContext().isAdm
       const token = isAdm
-        ? auth
-        : '3m3Z3tVlk-9ZTwyRHoYj4WCLHQctWYZV'
+        ? '3m3Z3tVlk-9ZTwyRHoYj4WCLHQctWYZV'
+        : auth
+      console.log('SEU AUTH: ' + auth)
       operation.setContext(
         ({ headers }: any) => ({
           headers: {
             ...headers,
-            Authorization: 'Bearer ' + token, // however you get your token
+            authorization: 'bearer ' + token, // however you get your token
           },
         }),
       )
@@ -27,7 +28,7 @@ export const AuthLink = (session?: Session) => {
     },
   )
   const httpLink = new HttpLink({
-    uri: 'http://localhost:8055/graphql',
+    uri: 'http://179.159.233.150:8055/graphql',
   })
   return [apolloLink, httpLink]
 }

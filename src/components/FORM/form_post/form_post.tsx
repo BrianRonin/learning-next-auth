@@ -2,12 +2,11 @@ import { InputOne } from '../../INPUT/input_one/input_one'
 import { useState, FormEvent } from 'react'
 import * as S from './S.form_post'
 import { ButtonOne } from '../../BUTTON/button_one/button_one'
-import { useRouter } from 'next/router'
 import { Post } from '../../../types/post'
 
 export type formPostProps = {
   onSave?: (post: Post) => any
-  post?: Post
+  post: Post | Record<string, never>
 }
 
 export const FormPost = ({
@@ -15,31 +14,30 @@ export const FormPost = ({
   post,
 }: formPostProps) => {
   const {
-    title = 'titulo',
-    content = 'conteudoff',
-    id = false,
+    title = '',
+    content = '',
+    id = -1,
   } = post || {}
   const [newTitle, setNewTitle] = useState(title)
   const [newContent, setNewContent] =
     useState(content)
   const [saving, setSaving] = useState(false)
+
   const handleSubmit = async (
     event: FormEvent,
   ) => {
-    setSaving(() => true)
+    setSaving(true)
     event.preventDefault()
-    const hasId = id ? id : {}
     const newPost = {
       title: newTitle,
       content: newContent,
-      ...hasId,
+      id,
     }
-
     if (onSave) {
-      onSave(newPost)
+      await onSave(newPost)
     }
 
-    setSaving(() => false)
+    setSaving(false)
   }
 
   return (
@@ -58,7 +56,7 @@ export const FormPost = ({
         as='textarea'
       />
       <ButtonOne disabled={saving} type='submit'>
-        Salvar
+        {saving ? 'Aguarde...' : 'Salvar'}
       </ButtonOne>
     </S.Main>
   )

@@ -11,7 +11,6 @@ export const Base = ({ children }: baseProps) => {
   return (
     <S.Main>
       <Nav />
-      <ToggleTheme />
       {children}
     </S.Main>
   )

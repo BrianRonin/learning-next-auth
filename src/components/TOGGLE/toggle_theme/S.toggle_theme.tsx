@@ -4,8 +4,14 @@ import styled from '@emotion/styled'
 export const Main = styled.div`
   ${({ theme }) => css`
     position: fixed;
-    top: 8rem;
-    right: 2rem;
-    z-index: 2;
+    right: 5px;
+    top: 7rem;
+    display: flex;
+    &:hover {
+      cursor: pointer;
+    }
+    @media ${theme.media.lMedium} {
+      top: 5.5rem;
+    }
   `}
 `

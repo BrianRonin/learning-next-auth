@@ -15,26 +15,8 @@ import {
   AuthLink,
   Client,
 } from '../api/graphql/apollo_client'
-import { ContextPost } from './../contexts/updatePost/updatePost'
+import { ContextPost } from '../contexts/Posts/Posts'
 import { Session } from 'next-auth'
-
-const SetLinkClient = ({
-  children,
-}: {
-  children: ReactNode
-}) => {
-  const { data, status } = useSession()
-  data?.auth &&
-    Client.setLink(
-      from(
-        AuthLink({
-          auth: data.auth,
-        } as Session),
-      ),
-    )
-
-  return <>{children}</>
-}
 
 const myFont = Roboto({
   style: ['normal', 'italic'],
@@ -49,7 +31,6 @@ export default function App({
   return (
     <SessionProvider session={pageProps.session}>
       <ApolloProvider client={Client}>
-        {/* <SetLinkClient> */}
         <Theme>
           <GlobalStyles />
           <ContextPost>
@@ -58,7 +39,6 @@ export default function App({
             </main>
           </ContextPost>
         </Theme>
-        {/* </SetLinkClient> */}
       </ApolloProvider>
     </SessionProvider>
   )
