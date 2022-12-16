@@ -19,7 +19,6 @@ export const Nav = () => {
     <S.Main>
       <S.Content>
         <NavLink redirect='/'>Home</NavLink>
-
         {status === 'unauthenticated' && (
           <Link
             href={{
@@ -44,12 +43,13 @@ export const Nav = () => {
               }
             >
               <IoMdLogOut
-                color={theme.colors.bg}
+                color={theme.colors.text}
               />
             </div>
           </>
         )}
-        <ToggleTheme />
+        <ToggleTheme className='toggle-theme-inside' />
+        <ToggleTheme className='toggle-theme-outside' />
       </S.Content>
     </S.Main>
   )

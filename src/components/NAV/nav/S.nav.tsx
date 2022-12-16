@@ -3,8 +3,9 @@ import styled from '@emotion/styled'
 
 export const Main = styled.nav`
   ${({ theme }) => css`
+    z-index: ${theme.layers.layer2};
     display: flex;
-    position: relative;
+    position: fixed;
     justify-content: center;
     flex-flow: row wrap;
     align-items: center;
@@ -12,9 +13,36 @@ export const Main = styled.nav`
     width: 100vw;
     height: 7vh;
     min-height: 3rem;
-    background: ${theme.colors.darkBg};
+    background-color: fade(${theme.colors.darkBg}, 50%);
+    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(30px);
     @media ${theme.media.lMedium} {
       height: 5vh;
+    }
+    .toggle-theme-inside {
+      position: absolute;
+      top: 3px;
+      right: 22rem;
+      display: flex;
+      gap: 3rem;
+      &:hover {
+        cursor: pointer;
+      }
+      @media ${theme.media.lMedium}{
+        display: none;
+      }
+    }
+    .toggle-theme-outside {
+      position: fixed;
+      right: 3rem;
+      top: 7rem;
+      display: flex;
+      &:hover {
+        cursor: pointer;
+      }
+      @media ${theme.media.gMedium} {
+        display: none;
+      }
     }
   `}
 `
@@ -33,7 +61,7 @@ export const Content = styled.div`
 
     a {
       font-size: ${theme.fonts.sizes.medium};
-      color: ${theme.colors.bg};
+      color: ${theme.colors.text};
       display: block;
       white-space: pre-wrap;
       text-decoration: none;
@@ -46,6 +74,7 @@ export const Content = styled.div`
       position: absolute;
       right: 3rem;
       display: flex;
+      gap: 3rem;
       &:hover {
         cursor: pointer;
       }

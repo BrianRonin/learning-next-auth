@@ -1,7 +1,6 @@
 import { buttonWithIconProps } from './button_with_icon'
 import { css, Theme } from '@emotion/react'
 import styled from '@emotion/styled'
-import { inject_styles } from '../../../types/emotion'
 
 const variables = (theme: Theme) => css`
   --bg-icon: #806371;
@@ -21,20 +20,15 @@ const variables = (theme: Theme) => css`
   );
 `
 
-export const Main = styled.div<{
-  styles?: inject_styles
-}>`
-  ${({ theme, styles }) => css`
+export const Main = styled.div`
+  ${({ theme}) => css`
     display: flex;
 
-    ${styles && styles(theme)}
   `}
 `
 
-export const Button = styled.button<{
-  styles?: inject_styles
-}>`
-  ${({ theme, styles }) => css`
+export const Button = styled.button`
+  ${({ theme }) => css`
     ${variables(theme)}
     position: relative;
     display: flex;
@@ -69,18 +63,14 @@ export const Button = styled.button<{
     :hover::after {
       left: 0;
     }
-    ${styles && styles(theme)}
   `}
 `
-export const Content = styled.div<{
-  styles?: inject_styles
-}>`
-  ${({ theme, styles }) => css`
+export const Content = styled.div`
+  ${({ theme}) => css`
     display: flex;
     position: relative;
     z-index: 5;
     align-items: center;
-    ${styles && styles(theme)}
   `}
 `
 export const IconContainer = styled.div`
@@ -97,11 +87,8 @@ export const IconContainer = styled.div`
     margin-left: var(--mg-left-icon));
   `}
 `
-export const TextContainer = styled.span<{
-  styles?: inject_styles
-}>`
-  ${({ theme, styles }) => css`
-    ${styles && styles(theme)}
+export const TextContainer = styled.span`
+  ${({ theme }) => css`
     ${variables(theme)}
     justify-content: center;
     align-items: center;

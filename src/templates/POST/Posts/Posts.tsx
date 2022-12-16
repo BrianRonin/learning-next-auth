@@ -15,15 +15,18 @@ import { C_Post } from '../../../contexts/Posts/Posts'
 
 export const Posts = () => {
   const router = useRouter()
-  const { status } = useSession()
   const { posts, setPost } = useContext(C_Post)
+  const { data, status } = useSession()
+
+  useEffect(() => {
+    if (status === 'unauthenticated')
+      router.push('/login', {
+        query: { redirect: router.pathname },
+      })
+  }, [status])
 
   if (status === 'loading') return <Base />
-  if (status === 'unauthenticated') {
-    router.push({
-      pathname: '/login',
-      query: { redirect: router.pathname },
-    })
+  if (status !== 'authenticated' || !data?.auth) {
     return null
   }
 

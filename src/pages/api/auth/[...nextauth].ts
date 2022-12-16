@@ -1,28 +1,65 @@
 import NextAuth from 'next-auth/next'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import GoogleProvider from 'next-auth/providers/google'
 import { User } from 'next-auth'
 import { JWT } from 'next-auth/jwt'
-import { Directus } from '@directus/sdk'
 import { Auth } from '../../../types/nextAuth'
+import { directus } from '../../../api/directus'
+import { Client } from '../../../api/graphql/apollo_client'
+import { query_user } from '../../../api/graphql/Auth/queries'
 
-export const directus = new Directus(
-  'http://localhost:8055',
-)
 const get_new_token = async (
   credentials: Auth,
 ) => {
-  const token = await directus.auth.login(
-    credentials,
-  )
   const expire = Date.now() + 800000
-  return {
-    expire,
-    auth: token.access_token,
+  try {
+    const token = await directus.auth.login(
+      credentials,
+    )
+    console.log('TOKEN: ' + token)
+    return {
+      expire,
+      auth: token.access_token,
+    }
+  } catch (e) {
+    //
+    return null
   }
 }
 
-5
+const loginDirectus = async (user: Auth) => {
+  const token = await get_new_token(user as Auth)
+  const { first_name, avatar } =
+    await directus.users.me.read()
+
+  return {
+    ...token,
+    credentials: user,
+    user: {
+      name: first_name,
+      avatar,
+    },
+  } as JWT
+}
+
+type UseInfoGoogle = {
+  id: string
+  email: string
+  verified_email: boolean
+  name: string
+  given_name: string
+  family_name: string
+  picture: string
+  locale: string
+}
 export default NextAuth({
+  pages: {
+    signIn: '/login',
+    signOut: '/login',
+    error: '/login', // Error code passed in query string as ?error=
+    verifyRequest: '/login', // (used for check email message)
+    newUser: '/login', // New users will be directed here on first sign in (leave the property out if not of interest)
+  },
   secret: process.env.NEXT_AUTH_SECRET,
   jwt: {
     secret: process.env.JWT_SIGNING_PRIVATE_KEY,
@@ -62,30 +99,96 @@ export default NextAuth({
             password: credentials.password,
           } as User
         } catch (e) {
-          console.log(e)
+          //
           return null
         }
       },
+    }),
+    GoogleProvider({
+      clientId: process.env
+        .NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env
+        .NEXT_PUBLIC_GOOGLE_SECRET_AUTH as string,
     }),
   ],
   callbacks: {
     jwt: async ({ token, user, account }) => {
       if (account && user) {
         if (account.type === 'credentials') {
-          const { first_name } =
-            await directus.users.me.read()
-          const token = await get_new_token(
-            user as Auth,
-          )
-          return {
-            ...token,
-            credentials: user,
-            user: {
-              name: first_name,
+          try {
+            const jwt = await loginDirectus(
+              user as Auth,
+            )
+            return jwt
+          } catch (e) {
+            //
+            return null
+          }
+        } else if (
+          account.provider === 'google'
+        ) {
+          const userInfo = (await fetch(
+            'https://www.googleapis.com/oauth2/v2/userinfo',
+            {
+              headers: {
+                Authorization: `Bearer ${account.access_token}`,
+              },
             },
-          } as JWT
+          ).then((r) =>
+            r.json(),
+          )) as UseInfoGoogle
+          if (!userInfo.email) return
+          const isNewUser = await Client.query<{
+            users: any[]
+          }>({
+            query: query_user,
+            variables: { email: userInfo.email },
+            context: {
+              isAdm: true,
+              system: true,
+            },
+          }).then(
+            ({ data: { users } }) =>
+              users.length === 0,
+          )
+          if (isNewUser) {
+            try {
+              await directus.users.createOne({
+                email: userInfo.email,
+                password:
+                  process.env.NEXTAUTH_SECRET,
+                first_name: userInfo.name,
+                role: process.env
+                  .DIRECTUS_ROLE_USER,
+                avatar: userInfo.picture,
+              })
+            } catch (e) {
+              //
+              return null
+            }
+          }
+          try {
+            const jwt = await loginDirectus({
+              email: userInfo.email,
+              password: process.env
+                .NEXTAUTH_SECRET as string,
+            })
+            return jwt
+          } catch (e) {
+            //
+            return null
+          }
         }
       }
+      console.log(
+        'Account: ' + JSON.stringify(account),
+      )
+      // console.log(
+      //   'User: ' + JSON.stringify(account),
+      // )
+      // console.log(
+      //   'Token: ' + JSON.stringify(account),
+      // )
 
       if (token.expire <= Date.now()) {
         const _token = await get_new_token(

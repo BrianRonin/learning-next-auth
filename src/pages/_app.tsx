@@ -2,21 +2,10 @@ import type { AppProps } from 'next/app'
 import { GlobalStyles } from '../styles/globals'
 import { Roboto } from '@next/font/google'
 import { Theme } from '../contexts/theme/theme'
-import {
-  SessionProvider,
-  useSession,
-} from 'next-auth/react'
-import { ReactNode, useEffect } from 'react'
-import {
-  ApolloProvider,
-  from,
-} from '@apollo/client'
-import {
-  AuthLink,
-  Client,
-} from '../api/graphql/apollo_client'
+import { SessionProvider } from 'next-auth/react'
+import { ApolloProvider } from '@apollo/client'
+import { Client } from '../api/graphql/apollo_client'
 import { ContextPost } from '../contexts/Posts/Posts'
-import { Session } from 'next-auth'
 
 const myFont = Roboto({
   style: ['normal', 'italic'],

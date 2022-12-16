@@ -3,7 +3,8 @@ import styled from '@emotion/styled'
 import { toggleProps } from './toggle'
 
 export const Main = styled.div`
-  ${({ theme }) => css``}
+  ${({ theme }) => css`
+  `}
 `
 
 export const Label = styled.label`
@@ -15,7 +16,6 @@ export const Label = styled.label`
     line-height: 0;
     font-size: 0;
     overflow: hidden;
-    color: rgba(0, 0, 0, 0);
   `}
 `
 
@@ -25,9 +25,9 @@ export const Input = styled.input`
     opacity: 0;
     width: 0;
     height: 0;
+    background: ${theme.colors.primary};
     &:checked + ${Slider} {
-      background: ${theme.colors.bg};
-    }
+    },
     &:focus + ${Slider} {
       box-shadow: 0 1 2px
         ${theme.colors.secondary};
@@ -47,9 +47,13 @@ export const Slider = styled.span`
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${theme.colors.mediumGray};
     transition: all 300ms ease-in-out;
     border-radius: 2rem;
+    background: ${theme.colors.text};
+    opacity: 0.8;
+    &:hover {
+      opacity: 1;
+    }
     box-shadow: 0 0 2px ${theme.colors.primary};
     &:before {
       content: '';

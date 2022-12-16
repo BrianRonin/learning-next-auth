@@ -11,9 +11,11 @@ import { useContext, useEffect } from 'react'
 import { C_Post } from '../../../contexts/Posts/Posts'
 import { Post } from '../../../types/post'
 import { useRouter } from 'next/router'
+import { useAuthenticated } from '../../../hooks/useAuthenticated'
 
 export const MutatePost = () => {
   const router = useRouter()
+  const { data, status } = useSession()
   const [_createPost] =
     useMutation<{
       create_post_item: Post
@@ -24,7 +26,6 @@ export const MutatePost = () => {
       updatePost,
     )
 
-  const { data, status } = useSession()
   const { post, setPost, setPosts } =
     useContext(C_Post)
 
@@ -35,7 +36,8 @@ export const MutatePost = () => {
       })
   }, [status])
 
-  if (status !== 'authenticated') {
+  if (status === 'loading') return <Base />
+  if (status !== 'authenticated' || !data?.auth) {
     return null
   }
 

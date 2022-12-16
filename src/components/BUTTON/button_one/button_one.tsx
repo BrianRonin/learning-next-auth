@@ -9,16 +9,22 @@ export type buttonOneProps = {
   disabled?: boolean
   onClick?: () => void
   icon?: ReactNode
-} & ButtonHTMLAttributes<HTMLButtonElement>
+  className?: string
+}
 
 export const ButtonOne = ({
   children,
   disabled,
   onClick,
   icon,
+  className,
 }: buttonOneProps) => {
   return (
-    <S.Main disabled={disabled} onClick={onClick}>
+    <S.Main
+      disabled={disabled}
+      onClick={onClick}
+      className={className}
+    >
       {children}
       {!!icon && icon}
     </S.Main>

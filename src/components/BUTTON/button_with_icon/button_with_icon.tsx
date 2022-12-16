@@ -1,33 +1,27 @@
 import * as S from './S.button_with_icon'
 import { IconType } from 'react-icons'
-import { inject_styles } from '../../../types/emotion'
-
-export type buttonWithIconStyles = {
-  Main?: inject_styles
-  Button?: inject_styles
-  Content?: inject_styles
-  Text?: inject_styles
-}
 
 export type buttonWithIconProps = {
   text: string
   Icon: IconType | any
-  styles?: buttonWithIconStyles
+  onClick: <t>(e: t) => any
+  // styles?: buttonWithIconStyles
 }
 
 export const ButtonWithIcon = ({
   text,
   Icon,
-  styles,
-}: buttonWithIconProps) => {
+  onClick,
+}: // styles,
+buttonWithIconProps) => {
   return (
-    <S.Main styles={styles?.Main}>
-      <S.Button styles={styles?.Button}>
-        <S.Content styles={styles?.Content}>
+    <S.Main onClick={onClick}>
+      <S.Button>
+        <S.Content>
           <S.IconContainer>
             <Icon />
           </S.IconContainer>
-          <S.TextContainer styles={styles?.Text}>
+          <S.TextContainer>
             <span>{text}</span>
           </S.TextContainer>
         </S.Content>

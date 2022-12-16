@@ -52,14 +52,10 @@ export const refreshToken = gql`
 export const createUser = gql`
   mutation CreateUser(
     $email: String!
-    $Password: Hash
+    $password: Hash!
   ) {
     create_users_item(
-      data: {
-        email: $email
-        password: $Password
-        role: "6a2f9a94-91d4-499c-991b-4a6269af857b"
-      }
+      data: { email: $email, password: $password }
     )
   }
 `

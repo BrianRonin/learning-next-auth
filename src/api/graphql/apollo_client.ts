@@ -12,25 +12,44 @@ export const AuthLink = (session?: Session) => {
     (operation, forward) => {
       const auth = operation.getContext().auth
       const isAdm = operation.getContext().isAdm
-      const token = isAdm
-        ? '3m3Z3tVlk-9ZTwyRHoYj4WCLHQctWYZV'
-        : auth
-      console.log('SEU AUTH: ' + auth)
+      const token = () => {
+        const template = (token: string) => {
+          return {
+            Authorization: 'Bearer ' + token,
+          }
+        }
+        if (isAdm || auth)
+          return isAdm
+            ? template(
+                process.env
+                  .DIRECTUS_ADM_TOKEN as string,
+              )
+            : template(auth)
+        return {}
+      }
+      console.log(
+        'SEU AUTH: ' + JSON.stringify(token()),
+      )
       operation.setContext(
         ({ headers }: any) => ({
           headers: {
             ...headers,
-            authorization: 'bearer ' + token, // however you get your token
+            ...token(), // however you get your token
           },
         }),
       )
       return forward(operation)
     },
+  ).split(
+    (op) => op.getContext().system,
+    new HttpLink({
+      uri: 'http://localhost:8055/graphql/system',
+    }),
+    new HttpLink({
+      uri: 'http://localhost:8055/graphql',
+    }),
   )
-  const httpLink = new HttpLink({
-    uri: 'http://179.159.233.150:8055/graphql',
-  })
-  return [apolloLink, httpLink]
+  return [apolloLink]
 }
 // .split(
 //   (op) => op.getContext().system,
@@ -40,5 +59,4 @@ export const AuthLink = (session?: Session) => {
 export const Client = new ApolloClient({
   link: from(AuthLink()),
   cache: new InMemoryCache(),
-  ssrMode: true,
 })

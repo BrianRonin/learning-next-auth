@@ -8,3 +8,10 @@ export const query_me = gql`
     }
   }
 `
+export const query_user = gql`
+  query users($email: String!) {
+    users(filter: { email: { _eq: $email } }) {
+      email
+    }
+  }
+`

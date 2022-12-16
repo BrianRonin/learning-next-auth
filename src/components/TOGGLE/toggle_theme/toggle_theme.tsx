@@ -4,7 +4,11 @@ import { useContext } from 'react'
 import { theme_context } from '../../../contexts/theme/theme'
 import { if_window } from '../../../utils/is-window'
 
-export const ToggleTheme = () => {
+export const ToggleTheme = ({
+  className,
+}: {
+  className?: string
+}) => {
   const { setTheme } = useContext(theme_context)
   const changeTheme = (check: boolean) => {
     return if_window(() => {
@@ -29,7 +33,7 @@ export const ToggleTheme = () => {
   }
 
   return (
-    <S.Main>
+    <S.Main className={className}>
       <Toggle
         onChange={changeTheme}
         initialValue={currentTheme}
