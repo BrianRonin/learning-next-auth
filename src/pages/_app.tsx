@@ -5,7 +5,8 @@ import { Theme } from '../contexts/theme/theme'
 import { SessionProvider } from 'next-auth/react'
 import { ApolloProvider } from '@apollo/client'
 import { Client } from '../api/graphql/apollo_client'
-import { ContextPost } from '../contexts/Posts/Posts'
+import { ContextPost } from '../contexts/posts/posts'
+import { ContextLoadingRoute } from '../contexts/loading_route/loading_route'
 
 const myFont = Roboto({
   style: ['normal', 'italic'],

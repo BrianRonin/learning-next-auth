@@ -6,19 +6,47 @@ import {
   signOut,
   useSession,
 } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { useTheme } from '@emotion/react'
 import { ToggleTheme } from '../../TOGGLE/toggle_theme/toggle_theme'
+import {
+  useState,
+  useEffect,
+  useContext,
+} from 'react'
+import { C_LoadingRoute } from '../../../contexts/loading_route/loading_route'
 
 export const Nav = () => {
   const theme = useTheme()
-  const { status, data } = useSession()
+  const { status } = useSession()
+  const [routeLoading, setRouteLoading] =
+    useState('')
+
+  useEffect(() => {
+    Router.events.on('routeChangeStart', (e) =>
+      setRouteLoading(e),
+    )
+    Router.events.on('routeChangeComplete', (e) =>
+      setRouteLoading(''),
+    )
+    Router.events.on('routeChangeError', (e) =>
+      setRouteLoading(''),
+    )
+  }, [Router.events])
+
   const router = useRouter()
+  if (status === 'loading') return null
 
   return (
     <S.Main>
       <S.Content>
-        <NavLink redirect='/'>Home</NavLink>
+        <Link href={'/'}>
+          <S.NavLink
+            loading={routeLoading === '/home'}
+          >
+            Home
+          </S.NavLink>
+        </Link>
         {status === 'unauthenticated' && (
           <Link
             href={{
@@ -28,14 +56,25 @@ export const Nav = () => {
               },
             }}
           >
-            Login
+            <S.NavLink
+              loading={routeLoading === '/login'}
+            >
+              Login
+            </S.NavLink>
           </Link>
         )}
         {status === 'authenticated' && (
-          <>
-            <NavLink redirect='/posts'>
-              Posts
-            </NavLink>
+          <div>
+            <Link href='/posts'>
+              <S.NavLink
+                loading={
+                  routeLoading === '/posts' ||
+                  routeLoading === '/mutate-post'
+                }
+              >
+                Posts
+              </S.NavLink>
+            </Link>
             <div
               className='logout'
               onClick={() =>
@@ -46,7 +85,7 @@ export const Nav = () => {
                 color={theme.colors.text}
               />
             </div>
-          </>
+          </div>
         )}
         <ToggleTheme className='toggle-theme-inside' />
         <ToggleTheme className='toggle-theme-outside' />

@@ -5,7 +5,7 @@ import { deletePost } from '../../api/graphql/Post/mutations'
 import { useSession } from 'next-auth/react'
 import { useState, useContext } from 'react'
 import { useRouter } from 'next/router'
-import { C_Post } from '../../contexts/Posts/Posts'
+import { C_Post } from '../../contexts/posts/posts'
 import { useMutation } from '@apollo/client'
 export type cardProps = {
   content: string

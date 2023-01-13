@@ -13,7 +13,7 @@ import {
   callBackFormLogin0Props,
   FormLogin0,
 } from '../../components/FORM/form_login_0/form_login_0'
-import { C_Post } from '../../contexts/Posts/Posts'
+import { C_Post } from '../../contexts/posts/posts'
 import { Base } from '../Base/Base'
 import { BsGoogle } from 'react-icons/bs'
 import * as S from './S.Login'
@@ -50,6 +50,14 @@ export const Login = () => {
   }
 
   const handleLoginGoogle = async () => {
+    // router.push(
+    //   'http://localhost:8055/auth/login/google',
+    //   {
+    //     query: {
+    //       redirect: 'http://localhost:3000',
+    //     },
+    //   },
+    // )
     await signIn('google', { redirect: false })
   }
 

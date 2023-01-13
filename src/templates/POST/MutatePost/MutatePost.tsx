@@ -8,7 +8,7 @@ import {
 import { useSession } from 'next-auth/react'
 import { useMutation } from '@apollo/client'
 import { useContext, useEffect } from 'react'
-import { C_Post } from '../../../contexts/Posts/Posts'
+import { C_Post } from '../../../contexts/posts/posts'
 import { Post } from '../../../types/post'
 import { useRouter } from 'next/router'
 import { useAuthenticated } from '../../../hooks/useAuthenticated'

@@ -58,18 +58,6 @@ export const Content = styled.div`
     max-width: 80rem;
     gap: 3rem;
     margin: 0 auto;
-
-    a {
-      font-size: ${theme.fonts.sizes.medium};
-      color: ${theme.colors.text};
-      display: block;
-      white-space: pre-wrap;
-      text-decoration: none;
-      &:hover {
-        color: ${theme.colors.primary} !important;
-      }
-    }
-
     .logout {
       position: absolute;
       right: 3rem;
@@ -106,6 +94,43 @@ export const Content = styled.div`
       svg {
         font-size: ${theme.fonts.sizes.medium};
       }
+    }
+  `}
+`
+export const NavLink = styled.a<{loading: boolean}>`
+  ${({theme, loading}) => css`
+    font-size: ${theme.fonts.sizes.medium};
+    color: ${theme.colors.text};
+    display: block;
+    white-space: pre-wrap;
+    text-decoration: none;
+    position: relative;
+    overflow-x: hidden;
+    &:hover {
+      color: ${theme.colors.primary} !important;
+    }
+    @keyframes loading {
+      0% {
+        margin-left: -32%;
+      }
+      99% {
+        margin-left: 99%;
+      }
+      100% {
+        margin-left: 100%;
+      }
+    }
+    ::after {
+      content: '';
+      display: block;
+      text-align: center;
+      overflow-x: hidden;
+      width: 0%;
+      border-bottom: solid 1px ${theme.colors.primary};
+      ${loading && css`
+        width: 30%;
+        animation: loading 1s infinite;
+      `}
     }
   `}
 `

@@ -11,7 +11,7 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { C_Post } from '../../../contexts/Posts/Posts'
+import { C_Post } from '../../../contexts/posts/posts'
 
 export const Posts = () => {
   const router = useRouter()

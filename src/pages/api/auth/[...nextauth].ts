@@ -137,6 +137,10 @@ export default NextAuth({
           ).then((r) =>
             r.json(),
           )) as UseInfoGoogle
+          console.log(
+            'account Google: ' +
+              JSON.stringify(account),
+          )
           if (!userInfo.email) return
           const isNewUser = await Client.query<{
             users: any[]
@@ -151,33 +155,41 @@ export default NextAuth({
             ({ data: { users } }) =>
               users.length === 0,
           )
-          if (isNewUser) {
-            try {
-              await directus.users.createOne({
-                email: userInfo.email,
-                password:
-                  process.env.NEXTAUTH_SECRET,
-                first_name: userInfo.name,
-                role: process.env
-                  .DIRECTUS_ROLE_USER,
-                avatar: userInfo.picture,
-              })
-            } catch (e) {
-              //
-              return null
-            }
-          }
-          try {
-            const jwt = await loginDirectus({
-              email: userInfo.email,
-              password: process.env
-                .NEXTAUTH_SECRET as string,
-            })
-            return jwt
-          } catch (e) {
-            //
-            return null
-          }
+
+          const response = await fetch(
+            `http://localhost:8055/auth/login/google/callback?code=${encodeURI(
+              account.access_token as string,
+            )}&scope=${encodeURI(
+              account.scope as string,
+            )}`,
+          )
+          console.log(response)
+          // if (isNewUser) {
+          //   try {
+          //     await directus.users.createOne({
+          //       email: userInfo.email,
+          //       password:
+          //         process.env.NEXTAUTH_SECRET,
+          //       first_name: userInfo.name,
+          //       role: process.env
+          //         .DIRECTUS_ROLE_USER,
+          //       avatar: userInfo.picture,
+          //     })
+          //   } catch (e) {
+          //     return null
+          //   }
+          // }
+          return null
+          // try {
+          //   const jwt = await loginDirectus({
+          //     email: userInfo.email,
+          //     password: process.env
+          //       .NEXTAUTH_SECRET as string,
+          //   })
+          //   return jwt
+          // } catch (e) {
+          //   return null
+          // }
         }
       }
       console.log(
